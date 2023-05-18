@@ -1,0 +1,11 @@
+<div class="input_container">
+    <h3>Lista de Tarefas</h3>
+    <ul *ngFor="let tarefa of atividades">
+      <li>
+        <span *ngIf="!tarefa.editando">{{tarefa.nome}}</span>
+        <input *ngIf="tarefa.editando" type="text" [(ngModel)]="tarefa.nome" (keyup.enter)="salvarTarefa()">
+        <i *ngIf="tarefa.concluida" class="material-icons">done</i>
+        <button (click)="editarTarefa(tarefa)" [disabled]="tarefa.editando">Editar</button>
+      </li>
+    </ul>
+  </div>

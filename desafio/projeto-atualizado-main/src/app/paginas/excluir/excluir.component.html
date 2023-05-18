@@ -1,0 +1,11 @@
+<div class="input_container">
+    <h3>Lista de Tarefas</h3>
+    <ul *ngFor="let tarefa of atividades">
+      <li>
+          {{tarefa.nome}} <i *ngIf="tarefa.concluida" class="material-icons">done</i>
+      </li>
+      <i (click)="excluir(tarefa.id)" class="material-icons">DELETAR</i>
+    </ul>
+  </div>
+
+
