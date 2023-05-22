@@ -1,7 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
+import pg from "pg";
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-
 
 config();
 
@@ -20,43 +20,71 @@ const middleware: RequestHandler = (req: Request, res: Response, next: NextFunct
 
 app.use(middleware);
 
-let tarefas = [];
-let nextId = 1;
-
-app.get("/tarefas", (req: Request, res:Response) => {
-  res.json(tarefas);
+const pool = new pg.Pool({
+  user: 'postgres',
+  password: 'postgres',
+  host: 'localhost',
+  database: 'joao',
+  port: 5432,
 });
 
-app.post("/tarefas", (req:Request, res:Response) => {
+// Operação GET - Obter todas as tarefas
+app.get("/tarefas", (req: Request, res: Response) => {
+  pool.query('SELECT * FROM tarefas', (error, result) => {
+    if (error) {
+      console.error('Erro ao obter as tarefas:', error);
+      res.sendStatus(500);
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+// Operação POST - Adicionar uma nova tarefa
+app.post("/tarefas", (req: Request, res: Response) => {
   const novaTarefa = req.body;
-  novaTarefa.id = nextId;
-  nextId++;
-  tarefas.push(novaTarefa);
-  console.log("Nova tarefa adicionada:", novaTarefa);
-  res.sendStatus(201);
+  pool.query('INSERT INTO tarefas (nome, concluida, editando) VALUES ($1, $2, $3)', [novaTarefa.nome, novaTarefa.concluida, novaTarefa.editando], (error) => {
+    if (error) {
+      console.error('Erro ao adicionar nova tarefa:', error);
+      res.sendStatus(500);
+    } else {
+      console.log("Nova tarefa adicionada:", novaTarefa);
+      res.sendStatus(201);
+    }
+  });
 });
 
-app.put("/tarefas/:id", (req:Request, res:Response) => {
+// Operação PUT - Atualizar uma tarefa existente
+app.put("/tarefas/:id", (req: Request, res: Response) => {
   const tarefaId = Number(req.params.id);
   const tarefaAtualizada = req.body;
-  const tarefaExistente = tarefas.find((tarefa) => tarefa.id === tarefaId);
-
-  if (tarefaExistente) {
-    tarefas = tarefas.map((tarefa) =>
-      tarefa.id === tarefaId ? tarefaAtualizada : tarefa
-    );
-    console.log("Tarefa atualizada:", tarefaAtualizada);
-    res.sendStatus(200);
-  } else {
-    res.sendStatus(404);
-  }
+  pool.query('UPDATE tarefas SET nome = $1, concluida = $2, editando = $3 WHERE id = $4', [tarefaAtualizada.nome, tarefaAtualizada.concluida, tarefaAtualizada.editando, tarefaId], (error, result) => {
+    if (error) {
+      console.error('Erro ao atualizar a tarefa:', error);
+      res.sendStatus(500);
+    } else if (result.rowCount === 0) {
+      res.sendStatus(404); // Tarefa não encontrada
+    } else {
+      console.log("Tarefa atualizada:", tarefaAtualizada);
+      res.sendStatus(200);
+    }
+  });
 });
 
-app.delete("/tarefas/:id", (req:Request, res:Response) => {
+// Operação DELETE - Excluir uma tarefa
+app.delete("/tarefas/:id", (req: Request, res: Response) => {
   const tarefaId = Number(req.params.id);
-  tarefas = tarefas.filter((tarefa) => tarefa.id !== tarefaId);
-  console.log("Tarefa excluída:", tarefaId);
-  res.sendStatus(204);
+  pool.query('DELETE FROM tarefas WHERE id = $1', [tarefaId], (error, result) => {
+    if (error) {
+      console.error('Erro ao excluir a tarefa:', error);
+      res.sendStatus(500);
+    } else if (result.rowCount === 0) {
+      res.sendStatus(404); // Tarefa não encontrada
+    } else {
+      console.log("Tarefa excluída:", tarefaId);
+      res.sendStatus(204);
+    }
+  });
 });
 
 app.listen(port, () => {

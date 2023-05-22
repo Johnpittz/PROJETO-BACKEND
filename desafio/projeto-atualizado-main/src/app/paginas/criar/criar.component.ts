@@ -29,7 +29,7 @@ export class CriarComponent implements OnInit {
         nome: nomeTarefa,
         concluida: false
       };
-      this.http.post<any>("http://localhost:3000/tarefas", novaTarefa).subscribe(() => {
+      this.http.post<string>("http://localhost:3000/tarefas", novaTarefa).subscribe(() => {
         this.tarefaService.getAtividades().subscribe(atividades => this.atividades = atividades);
       });
     }
