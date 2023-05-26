@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev -r dotenv/config ./backend/server.ts",
+    "dev": "ts-node-dev -r dotenv/config ./backend/aplicacao/controllers.ts",
     "build": "tsc",
-    "start": "node ./dist/backend/server.js"
+    "start": "node ./dist/backend/aplicacao/controllers.ts"
   },
   "keywords": [],
   "author": "",
