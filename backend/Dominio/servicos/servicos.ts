@@ -1,5 +1,5 @@
-import { NovaTarefa } from './../Frameworks/ITarefa';
-import Tarefa from "../Frameworks/tarefa";
+import { NovaTarefa } from '../models/ITarefa';
+import Tarefa from "../../Frameworks/Sequelize/tarefa";
 
 export async function guardarTarefa(novaTarefa: Partial<NovaTarefa>) {
   try {

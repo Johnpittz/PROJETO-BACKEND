@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction, RequestHandler } from "./Express";
+import { Request, Response, NextFunction, RequestHandler } from 'express';
+
+
 
 export const middleware: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -6,3 +8,4 @@ export const middleware: RequestHandler = (req: Request, res: Response, next: Ne
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   next();
 };
+

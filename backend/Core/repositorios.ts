@@ -1,14 +1,13 @@
-import { TarefaAtualizada } from './../Frameworks/ITarefa';
-import Tarefa from "../Frameworks/tarefa";
+import { TarefaAtualizada } from '../Dominio/models/ITarefa';
+import Tarefa from "../Frameworks/Sequelize/tarefa";
+import { throwTarefaNaoEncontradaError, logErroObterTarefas, logErroAtualizarTarefa, logErroExcluirTarefa } from "../Dominio/servicos/errors";
 
-
-export async function obterTodasTarefas() {
+export async function obterTodasTarefas(): Promise<Tarefa[]>{
   try {
     const tarefas = await Tarefa.findAll();
     return tarefas;
   } catch (error) {
-    console.error('Erro ao obter as tarefas:', error);
-    throw error;
+    logErroObterTarefas(error);
   }
 }
 
@@ -18,13 +17,12 @@ export async function atualizarTarefa(tarefaId: number, tarefaAtualizada: Tarefa
       where: { id: tarefaId }
     });
     if (result[0] === 0) {
-      throw new Error('Tarefa não encontrada');
+      throwTarefaNaoEncontradaError();
     } else {
       console.log("Tarefa atualizada:", tarefaAtualizada);
     }
   } catch (error) {
-    console.error('Erro ao atualizar a tarefa:', error);
-    throw error;
+    logErroAtualizarTarefa(error);
   }
 }
 
@@ -34,12 +32,11 @@ export async function excluirTarefa(tarefaId: number) {
       where: { id: tarefaId }
     });
     if (result === 0) {
-      throw new Error('Tarefa não encontrada');
+      throwTarefaNaoEncontradaError();
     } else {
       console.log("Tarefa excluída:", tarefaId);
     }
   } catch (error) {
-    console.error('Erro ao excluir a tarefa:', error);
-    throw error;
+    logErroExcluirTarefa(error);
   }
 }
