@@ -1,4 +1,4 @@
-import { atualizarTarefa } from "../../Core/repositorios";
+import { atualizarTarefa } from "../../Core/repositorios/controleTarefas";
 import { Request, Response } from 'express';
 
 export const atualizarTarefas = async (req: Request, res: Response) => {

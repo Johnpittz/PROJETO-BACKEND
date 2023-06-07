@@ -1,5 +1,5 @@
 import { configsExpress } from "./backend/Frameworks/Express/Express";
-import { configurarRotas } from "./backend/Dominio/servicos/crud";
+import { configurarRotas } from "./backend/Frameworks/Express/rotas";
 
 const app = configsExpress();
 configurarRotas(app);

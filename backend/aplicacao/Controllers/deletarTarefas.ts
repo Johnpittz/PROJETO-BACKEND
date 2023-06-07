@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { excluirTarefa } from "../../Core/repositorios";
+import { excluirTarefa } from "../../Core/repositorios/controleTarefas";
 
 export const deletarTarefas = async (req: Request, res: Response) => {
   try {

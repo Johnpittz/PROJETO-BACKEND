@@ -1,4 +1,4 @@
-import { guardarTarefa } from "../../Dominio/servicos/servicos";
+import { guardarTarefa } from "../../Dominio/servicos/UseCase";
 import { Request, Response } from 'express';
 
 export const criarTarefas = async (req: Request, res: Response) => {

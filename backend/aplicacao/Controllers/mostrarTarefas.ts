@@ -1,4 +1,4 @@
-import { obterTodasTarefas } from "../../Core/repositorios";
+import { obterTodasTarefas } from "../../Core/repositorios/controleTarefas";
 import { Request, Response } from 'express';
 
 export const mostrarTarefas = async (req: Request, res: Response) => {
